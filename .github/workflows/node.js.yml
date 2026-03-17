@@ -28,8 +28,3 @@ jobs:
 
       - name: Build
         run: npm run build
-
-          - name: Install Dependencies
-          run: |
-          cd client && npm install
-          cd ../server && npm install
