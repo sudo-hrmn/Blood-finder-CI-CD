@@ -339,8 +339,6 @@ export default function BloodDonationFinder() {
   const [searchCity, setSearchCity] = useState("");
   const [contactDonor, setContactDonor] = useState(null);
   const [showRegister, setShowRegister] = useState(false);
-  const [activeTab, setActiveTab] = useState("search"); // "search" | "register" | "stats"
-
   const filtered = useMemo(() => {
     return donors
       .filter(d =>
