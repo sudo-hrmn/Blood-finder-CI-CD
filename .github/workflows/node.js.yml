@@ -1,0 +1,35 @@
+name: Blood-finder-CI-CD
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "23"
+
+      - name: Frontend Compilation (Syntax Check)
+        run: |
+          cd client
+          find . -name "*.js" -exec node --check {} +
+
+      - name: Backend Compilation (Syntax Check)
+        run: |
+          cd server
+          find . -name "*.js" -exec node --check {} +
+
+          - name: Install Dependencies
+          run: |
+          cd client && npm install
+          cd ../server && npm install
