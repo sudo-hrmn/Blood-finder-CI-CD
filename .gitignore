@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# GSD session files
+.gsd/STATE.md
+.gsd/JOURNAL.md
+.gsd/TODO.md
