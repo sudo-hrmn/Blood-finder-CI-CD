@@ -80,6 +80,7 @@ jobs:
             -Dsonar.projectName=Blood-finder-CI-CD
             -Dsonar.sources=src
             -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/**
+            -Dsonar.qualitygate.wait=false
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
