@@ -186,7 +186,7 @@ jobs:
                     image: ${IMAGE}
                     imagePullPolicy: Always
                     ports:
-                      - containerPort: 9090
+                      - containerPort: 80
           ---
           apiVersion: v1
           kind: Service
@@ -199,7 +199,7 @@ jobs:
               app: blood-finder
             ports:
               - port: 80
-                targetPort: 9090
+                targetPort: 80
                 nodePort: 30090
           EOF
 

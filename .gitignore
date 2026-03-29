@@ -27,3 +27,6 @@ dist-ssr
 .gsd/STATE.md
 .gsd/JOURNAL.md
 .gsd/TODO.md
+
+# GitHub self-hosted runner (local)
+/actions-runner/
