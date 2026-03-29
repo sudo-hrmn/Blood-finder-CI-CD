@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: blood-finder
+  namespace: blood-finder
+  labels:
+    app: blood-finder
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: blood-finder.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: blood-finder
+                port:
+                  number: 80

@@ -1,0 +1,6 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - alertmanagerconfig-slo-gate.yaml
+  - service-ingress-nginx-metrics.yaml
+  - servicemonitor-ingress-nginx-metrics.yaml

@@ -23,6 +23,10 @@ dist-ssr
 *.sln
 *.sw?
 
+# Python cache
+__pycache__/
+*.pyc
+
 # GSD session files
 .gsd/STATE.md
 .gsd/JOURNAL.md
@@ -30,3 +34,7 @@ dist-ssr
 
 # GitHub self-hosted runner (local)
 /actions-runner/
+
+# Local Codex metadata
+.codex
+.codex/

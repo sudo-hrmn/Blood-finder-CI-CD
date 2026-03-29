@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blood-finder
+  namespace: blood-finder
+  labels:
+    app: blood-finder
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: blood-finder
+  template:
+    metadata:
+      labels:
+        app: blood-finder
+    spec:
+      containers:
+        - name: blood-finder
+          image: hrmnnn/blood-finder:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 20

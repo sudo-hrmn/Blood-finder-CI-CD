@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slo-gate
+  namespace: slo-gate
+  labels:
+    app: slo-gate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slo-gate
+  template:
+    metadata:
+      labels:
+        app: slo-gate
+    spec:
+      containers:
+        - name: slo-gate
+          image: ghcr.io/sudo-hrmn/blood-finder-slo-gate:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PROMETHEUS_URL
+              value: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+            - name: SLO_RULES_PATH
+              value: /etc/slo-gate/rules.yaml
+            - name: ARGOCD_SERVER
+              value: https://argocd-server.argocd.svc.cluster.local
+            - name: ARGOCD_INSECURE
+              value: "true"
+            - name: ARGOCD_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: slo-gate-secrets
+                  key: ARGOCD_TOKEN
+            - name: NOTIFICATION_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: slo-gate-secrets
+                  key: NOTIFICATION_WEBHOOK_URL
+                  optional: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 256Mi
+          volumeMounts:
+            - name: rules
+              mountPath: /etc/slo-gate/rules.yaml
+              subPath: rules.yaml
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+      volumes:
+        - name: rules
+          configMap:
+            name: slo-gate-rules

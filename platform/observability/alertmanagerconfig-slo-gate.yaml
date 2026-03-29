@@ -1,0 +1,26 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: slo-gate-rollback
+  namespace: monitoring
+  labels:
+    alertmanagerConfig: main
+spec:
+  route:
+    receiver: slo-gate-webhook
+    groupBy:
+      - alertname
+      - application
+      - service
+    groupWait: 30s
+    groupInterval: 5m
+    repeatInterval: 1h
+    matchers:
+      - name: alertname
+        matchType: =~
+        value: '.*(Burn|ErrorBudget|SLO).*'
+  receivers:
+    - name: slo-gate-webhook
+      webhookConfigs:
+        - url: http://slo-gate.slo-gate.svc.cluster.local:8080/hooks/alertmanager
+          sendResolved: true

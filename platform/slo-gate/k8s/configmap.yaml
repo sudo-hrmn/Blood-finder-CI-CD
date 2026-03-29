@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: slo-gate-rules
+  namespace: slo-gate
+data:
+  rules.yaml: |
+    defaults:
+      threshold: 14.0
+      blockOnNoData: false
+      sloTarget: 0.995
+      prometheusQueryTemplate: 'max(((sum(rate(nginx_ingress_controller_requests{namespace="{{namespace}}",service="{{service}}",status=~"5.."}[5m])) or on() vector(0)) / clamp_min(sum(rate(nginx_ingress_controller_requests{namespace="{{namespace}}",service="{{service}}"}[5m])), 1e-9)) / (1 - {{slo_target}}))'
+    applications:
+      blood-finder:
+        namespace: blood-finder
+        service: blood-finder
+        sloName: blood-finder-availability
+        threshold: 14.0
+        rollback:
+          argoApp: blood-finder

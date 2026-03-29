@@ -1,0 +1,21 @@
+apiVersion: pyrra.dev/v1alpha1
+kind: ServiceLevelObjective
+metadata:
+  name: blood-finder-availability
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+    prometheus: k8s
+    role: alert-rules
+    pyrra.dev/team: platform
+    application: blood-finder
+spec:
+  description: Availability SLO for blood-finder based on ingress request success ratio.
+  target: "99.5"
+  window: 28d
+  indicator:
+    ratio:
+      errors:
+        metric: nginx_ingress_controller_requests{namespace="blood-finder",service="blood-finder",status=~"5.."}
+      total:
+        metric: nginx_ingress_controller_requests{namespace="blood-finder",service="blood-finder"}

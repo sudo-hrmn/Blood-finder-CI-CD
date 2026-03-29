@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: blood-finder-slo-gate
+  namespace: blood-finder
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded,HookFailed
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: slo-gate-check
+          image: curlimages/curl:8.8.0
+          command:
+            - sh
+            - -c
+            - |
+              set -eu
+              payload='{"application":"blood-finder","service":"blood-finder","namespace":"blood-finder"}'
+              status_code="$(curl -sS -o /tmp/response.json -w "%{http_code}" \
+                -X POST "http://slo-gate.slo-gate.svc.cluster.local:8080/gate/check" \
+                -H "Content-Type: application/json" \
+                -d "${payload}")"
+
+              cat /tmp/response.json
+
+              if [ "${status_code}" -ge 300 ]; then
+                echo "SLO gate blocked sync (HTTP ${status_code})"
+                exit 1
+              fi
+
+              echo "SLO gate passed"

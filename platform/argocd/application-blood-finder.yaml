@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: blood-finder
+  namespace: argocd
+spec:
+  project: blood-finder-platform
+  source:
+    repoURL: https://github.com/sudo-hrmn/Blood-finder-CI-CD.git
+    targetRevision: main
+    path: gitops/apps/blood-finder
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: blood-finder
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

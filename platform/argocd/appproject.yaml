@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: blood-finder-platform
+  namespace: argocd
+spec:
+  description: GitOps project for blood-finder platform and app workloads.
+  sourceRepos:
+    - https://github.com/sudo-hrmn/Blood-finder-CI-CD.git
+  destinations:
+    - namespace: blood-finder
+      server: https://kubernetes.default.svc
+    - namespace: monitoring
+      server: https://kubernetes.default.svc
+    - namespace: slo-gate
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
